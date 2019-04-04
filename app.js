@@ -4,22 +4,58 @@ function buildMetadata(sample) {
 
   // Use `d3.json` to fetch the metadata for a sample
     // Use d3 to select the panel with id of `#sample-metadata`
-
+  var default_url = `/metadata/${sample}`;
+    d3.json(default_url).then(function (sample) {
+    var sample_metadata = d3.select("#sample-metadata");
     // Use `.html("") to clear any existing metadata
-
+    sample_metadata.html("");
     // Use `Object.entries` to add each key and value pair to the panel
     // Hint: Inside the loop, you will need to use d3 to append new
     // tags for each key-value in the metadata.
-
-    // BONUS: Build the Gauge Chart
-    // buildGauge(data.WFREQ);
+      Object.entries(sample).forEach(function ([key, value]) {
+        var row = sample_metadata.append("tr");
+        row.text(`${key}: ${value}`);
+      });
+    });
 }
+
 
 function buildCharts(sample) {
 
   // @TODO: Use `d3.json` to fetch the sample data for the plots
-
+      var data2 = `/samples/${sample}`;
+      console.log(sample);
+      console.log(data2);
+      d3.json(data2).then(function (data) {
     // @TODO: Build a Bubble Chart using the sample data
+
+      var x = data2.otu_ids;
+      var y = data2.sample_values;
+      var bubble_mark_size = data2.sample_values;
+      var bubble_mark = data2.otu_ids;
+      var text = data2.otu_labels;
+
+      var bub_data = {
+       type: "bubble",
+        mode: "markers",
+        x: x,
+        y: y,
+        text: text,
+        marker: {
+          color: bubble_mark,
+          size: bubble_mark_size,
+        }
+      };
+
+      var bub_chart = [bub_data];
+
+      var bub_layout = {
+        xaxis: { title: "Bubble Chart" },
+      };
+
+      Plotly.newPlot("bubble", chart_1, bubble_layout);
+
+    });
 
     // @TODO: Build a Pie Chart
     // HINT: You will need to use slice() to grab the top 10 sample_values,
